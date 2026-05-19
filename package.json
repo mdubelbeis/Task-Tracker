@@ -1,24 +1,27 @@
 {
-  "name": "cli-task-tracker",
+  "name": "task-tracker-cli",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "description": "A simple command-line task tracker built with Node.js",
+  "main": "./bin/index.js",
+  "bin": {
+    "task": "./bin/index.js"
+  },
   "scripts": {
-    "start:dev": "node src/app.js"
+    "start": "node ./bin/index.js",
+    "dev": "node ./bin/index.js",
+    "format": "prettier --write ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "devDependencies": {
-    "eslint": "^10.4.0",
-    "nodemon": "^3.1.14",
-    "prettier": "^3.8.3"
-  },
+  "keywords": [
+    "cli",
+    "node",
+    "task-tracker",
+    "commander"
+  ],
+  "author": "Mason Dubelbeis",
+  "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.2",
-    "commander": "^14.0.3",
-    "nanoid": "^5.1.11",
-    "node": "^22.22.3"
+    "commander": "^14.0.2",
+    "nanoid": "^3.3.11"
   }
 }
