@@ -1,16 +1,7 @@
-const chalk = require('chalk');
-const fs = require('fs');
 const { nanoid } = require('nanoid');
 
-const dbFile = `${__dirname}/../data/taskList.json`;
-
-const loadTasks = () => {
-  if (!fs.existsSync(dbFile)) {
-    fs.writeFileSync(dbFile, JSON.stringify([], null, 2));
-  }
-
-  return JSON.parse(fs.readFileSync(dbFile, 'utf-8'));
-};
+const { saveTasks } = require('../utils/taskStore');
+const { outputTask, outputAllTasks } = require('../utils/taskOutput');
 
 const createTask = (title, priority, taskList) => {
   const task = {
@@ -40,7 +31,7 @@ const completeTask = (id, taskList) => {
   saveTasks(taskList);
 
   outputTask(task);
-  console.log('Tasks marked as complete');
+  console.log('Task marked as complete');
 };
 
 const updateTaskTitle = (id, title, taskList) => {
@@ -81,8 +72,8 @@ const deleteTask = (id, taskList) => {
     return;
   }
 
-  taskList = taskList.filter((task) => id !== task.id);
-  saveTasks(taskList);
+  const updatedTaskList = taskList.filter((task) => id !== task.id);
+  saveTasks(updatedTaskList);
 
   console.log('Task deleted');
 };
@@ -106,32 +97,6 @@ const isValidPriority = (priority) => {
   return priorities.includes(priority.toUpperCase());
 };
 
-const outputTask = (task) => {
-  console.log();
-  console.log(`id: ${task.id}`);
-  console.log(`title: ${task.title}`);
-  console.log(
-    `completed: ${task.completed ? chalk.green('COMPLETED') : chalk.red('INCOMPLETE')}`
-  );
-  console.log(`priority: ${task.priority}`);
-  console.log(`createdAt: ${task.createdAt}`);
-  console.log();
-};
-
-const outputAllTasks = (taskArr) => {
-  console.log('=========================');
-  console.log(`Tasks: ${taskArr.length}`);
-  console.log('=========================');
-
-  for (let task of taskArr) {
-    outputTask(task);
-  }
-};
-
-const saveTasks = (taskList) => {
-  fs.writeFileSync(dbFile, JSON.stringify(taskList, null, 2));
-};
-
 const findTaskById = (id, taskList) => {
   return taskList.find((task) => id === task.id);
 };
@@ -140,11 +105,8 @@ module.exports = {
   createTask,
   listTasks,
   completeTask,
-  outputTask,
-  outputAllTasks,
   updateTaskTitle,
   updateTaskPriority,
   deleteTask,
   isValidPriority,
-  loadTasks,
 };

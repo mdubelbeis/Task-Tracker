@@ -11,8 +11,9 @@ const {
   updateTaskPriority,
   deleteTask,
   isValidPriority,
-  loadTasks,
 } = require('../utils/taskUtils');
+
+const { loadTasks } = require('../utils/taskStore');
 
 const program = new Command();
 
