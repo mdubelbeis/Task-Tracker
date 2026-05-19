@@ -77,7 +77,7 @@ program
   });
 
 program
-  .command('task-complete')
+  .command('complete')
   .description('Update task to complete')
   .argument('<id>', 'Task ID')
   .action((id) => completeTask(id, taskList));
@@ -87,7 +87,6 @@ program
   .description('Return task list')
   .option('-c, --completed', 'completed tasks')
   .option('-i, --incomplete', 'incomplete tasks')
-  .option('-a, --all', 'all tasks')
-  .action((str, options) => listTasks(str, taskList));
+  .action((options) => listTasks(options, taskList));
 
 program.parse();
