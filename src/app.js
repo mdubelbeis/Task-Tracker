@@ -73,15 +73,34 @@ program
   .action((id, title) => {
     try {
       const updatedTaskList = taskList.filter((task) => id === task.id);
-
       updatedTaskList[0].title = title;
-
       taskList = Object.assign(taskList, updatedTaskList[0]);
 
       fs.writeFile(dbFile, JSON.stringify(taskList), (err) => {
         if (err) return log(error);
 
         console.log('Title updated. Task list updated');
+      });
+    } catch (err) {
+      console.log('Error: ', err);
+    }
+  });
+
+program
+  .command('update-priority')
+  .description('Update task by Id')
+  .argument('<id>', 'Task ID')
+  .argument('<priority>', 'Update priority')
+  .action((id, priority) => {
+    try {
+      const updatedTaskList = taskList.filter((task) => id === task.id);
+      updatedTaskList[0].priority = priority;
+      taskList = Object.assign(taskList, updatedTaskList[0]);
+
+      fs.writeFile(dbFile, JSON.stringify(taskList), (err) => {
+        if (err) return log(error);
+
+        console.log('Priority updated. Task list updated');
       });
     } catch (err) {
       console.log('Error: ', err);
