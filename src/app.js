@@ -1,19 +1,17 @@
 #!/usr/bin/env node
 
 const { Command } = require('commander');
-const chalk = require('chalk');
 const fs = require('fs');
 
 const {
   createTask,
   listTasks,
-  outputTask,
-  outputAllTasks,
   completeTask,
   updateTaskTitle,
   updateTaskPriority,
   deleteTask,
   isValidPriority,
+  loadTasks,
 } = require('../utils/taskUtils');
 
 const program = new Command();
@@ -23,9 +21,10 @@ const dbFile = `${__dirname}/../data/taskList.json`;
 let taskList;
 
 try {
-  taskList = JSON.parse(fs.readFileSync(dbFile, 'utf-8'));
+  taskList = loadTasks();
 } catch (err) {
-  return console.log('ERROR: ', err);
+  console.log('ERROR: ', err.message);
+  process.exit(1);
 }
 
 program

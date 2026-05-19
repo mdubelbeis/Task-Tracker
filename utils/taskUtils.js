@@ -1,9 +1,16 @@
 const chalk = require('chalk');
 const fs = require('fs');
 const { nanoid } = require('nanoid');
-const { CLIENT_RENEG_WINDOW } = require('tls');
 
 const dbFile = `${__dirname}/../data/taskList.json`;
+
+const loadTasks = () => {
+  if (!fs.existsSync(dbFile)) {
+    fs.writeFileSync(dbFile, JSON.stringify([], null, 2));
+  }
+
+  return JSON.parse(fs.readFileSync(dbFile, 'utf-8'));
+};
 
 const createTask = (title, priority, taskList) => {
   const task = {
@@ -139,4 +146,5 @@ module.exports = {
   updateTaskPriority,
   deleteTask,
   isValidPriority,
+  loadTasks,
 };
