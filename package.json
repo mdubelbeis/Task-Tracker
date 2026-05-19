@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start:dev": "nodemon app.js"
+    "start:dev": "node src/app.js"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +16,9 @@
     "prettier": "^3.8.3"
   },
   "dependencies": {
+    "chalk": "^4.1.2",
     "commander": "^14.0.3",
-    "nanoid": "^5.1.11"
+    "nanoid": "^5.1.11",
+    "node": "^22.22.3"
   }
 }
