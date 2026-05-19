@@ -1,10 +1,23 @@
+#!/usr/bin/env node
+
 const { Command } = require('commander');
 const chalk = require('chalk');
 const fs = require('fs');
-const { nanoid } = require('nanoid');
+
+const {
+  createTask,
+  listTasks,
+  outputTask,
+  outputAllTasks,
+  completeTask,
+  updateTaskTitle,
+  updateTaskPriority,
+  deleteTask,
+  isValidPriority,
+} = require('../utils/taskUtils');
 
 const program = new Command();
-const priorities = ['HIGH', 'MEDIUM', 'LOW'];
+
 const dbFile = `${__dirname}/../data/taskList.json`;
 
 let taskList;
@@ -22,139 +35,59 @@ program
 
 program
   .command('add')
-  .description('Add task to file')
+  .description('Add task')
   .argument('<title>', 'Set task title')
   .argument('<priority>', 'Set task priority')
   .action((title, priority) => {
-    const newTask = {
-      id: nanoid(),
-      title,
-      priority,
-      completed: false,
-      createdAt: new Date().toISOString(),
-    };
+    const isValid = isValidPriority(priority);
 
-    taskList.push(newTask);
-
-    try {
-      fs.writeFile(dbFile, JSON.stringify(taskList), (err) => {
-        if (err) throw new Error('Unable to write to file');
-
-        console.log('Task List updated');
-      });
-    } catch (err) {
-      console.log('ERROR: ', err);
-    }
+    isValid
+      ? createTask(title, priority, taskList)
+      : program.error(
+          `Invalid priority provided: ${priority}\nPriority Options: [HIGH | MEDIUM | LOW]`
+        );
   });
 
 program
   .command('delete')
   .description('Delete task by Id')
   .argument('<id>', 'Task ID')
-  .action((id) => {
-    try {
-      const updatedTaskList = taskList.filter((task) => id !== task.id);
-
-      fs.writeFile(dbFile, JSON.stringify(updatedTaskList), (err) => {
-        if (err) return log(error);
-
-        console.log('Item removed. Task list updated');
-      });
-    } catch (err) {
-      console.log('Error: ', err);
-    }
-  });
+  .action((id) => deleteTask(id, taskList));
 
 program
   .command('update-title')
   .description('Update task by Id')
   .argument('<id>', 'Task ID')
   .argument('<title>', 'Update title')
-  .action((id, title) => {
-    try {
-      const updatedTaskList = taskList.filter((task) => id === task.id);
-      updatedTaskList[0].title = title;
-      taskList = Object.assign(taskList, updatedTaskList[0]);
-
-      fs.writeFile(dbFile, JSON.stringify(taskList), (err) => {
-        if (err) return log(error);
-
-        console.log('Title updated. Task list updated');
-      });
-    } catch (err) {
-      console.log('Error: ', err);
-    }
-  });
+  .action((id, title) => updateTaskTitle(id, title, taskList));
 
 program
   .command('update-priority')
-  .description('Update task by Id')
+  .description('Update task - [HIGH | MEDIUM | LOW]')
   .argument('<id>', 'Task ID')
   .argument('<priority>', 'Update priority')
   .action((id, priority) => {
-    try {
-      const updatedTaskList = taskList.filter((task) => id === task.id);
-      updatedTaskList[0].priority = priority;
-      taskList = Object.assign(taskList, updatedTaskList[0]);
+    const isValid = isValidPriority(priority);
 
-      fs.writeFile(dbFile, JSON.stringify(taskList), (err) => {
-        if (err) return log(error);
-
-        console.log('Priority updated. Task list updated');
-      });
-    } catch (err) {
-      console.log('Error: ', err);
-    }
+    isValid
+      ? updateTaskPriority(id, priority, taskList)
+      : program.error(
+          `Invalid priority provided: ${priority}\nPriority Options: [HIGH | MEDIUM | LOW]`
+        );
   });
+
+program
+  .command('task-complete')
+  .description('Update task to complete')
+  .argument('<id>', 'Task ID')
+  .action((id) => completeTask(id, taskList));
 
 program
   .command('list')
   .description('Return task list')
   .option('-c, --completed', 'completed tasks')
   .option('-i, --incomplete', 'incomplete tasks')
-  .action((str, options) => {
-    if (str.completed) {
-      const filteredTasks = taskList.filter((task) => task.completed);
-
-      for (let task of filteredTasks) {
-        console.log();
-        console.log(`id: ${task.id}`);
-        console.log(`title: ${task.title}`);
-        console.log(`completed: ${chalk.green('COMPLETED')}`);
-        console.log(`priority: ${task.priority}`);
-        console.log(`createdAt: ${task.createdAt}`);
-        console.log();
-      }
-      return;
-    }
-
-    if (str.incomplete) {
-      const filteredTasks = taskList.filter((task) => !task.completed);
-
-      for (let task of filteredTasks) {
-        console.log();
-        console.log(`id: ${task.id}`);
-        console.log(`title: ${task.title}`);
-        console.log(`completed: ${chalk.red('INCOMPLETE')}`);
-        console.log(`priority: ${task.priority}`);
-        console.log(`createdAt: ${task.createdAt}`);
-        console.log();
-      }
-      return;
-    }
-
-    for (let task of taskList) {
-      console.log();
-      console.log(`id: ${task.id}`);
-      console.log(`title: ${task.title}`);
-      console.log(
-        `completed: ${task.completed ? chalk.green('COMPLETED') : chalk.red('INCOMPLETE')}`
-      );
-      console.log(`priority: ${task.priority}`);
-      console.log(`createdAt: ${task.createdAt}`);
-      console.log();
-      return;
-    }
-  });
+  .option('-a, --all', 'all tasks')
+  .action((str, options) => listTasks(str, taskList));
 
 program.parse();
