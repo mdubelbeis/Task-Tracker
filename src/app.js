@@ -5,14 +5,12 @@ const { nanoid } = require('nanoid');
 
 const program = new Command();
 const priorities = ['HIGH', 'MEDIUM', 'LOW'];
-// const dbFile = `${__dirname}/../data/taskLists.json`;
+const dbFile = `${__dirname}/../data/taskList.json`;
 
 let taskList;
 
 try {
-  taskList = JSON.parse(
-    fs.readFileSync(`${__dirname}/../data/taskLists.json`, 'utf-8')
-  );
+  taskList = JSON.parse(fs.readFileSync(dbFile, 'utf-8'));
 } catch (err) {
   return console.log('ERROR: ', err);
 }
@@ -39,17 +37,54 @@ program
     taskList.push(newTask);
 
     try {
-      fs.writeFile(
-        `${__dirname}/../data/taskList.json`,
-        JSON.stringify(taskList),
-        (err) => {
-          if (err) throw new Error('Unable to write to file');
+      fs.writeFile(dbFile, JSON.stringify(taskList), (err) => {
+        if (err) throw new Error('Unable to write to file');
 
-          console.log('Task List updated');
-        }
-      );
+        console.log('Task List updated');
+      });
     } catch (err) {
       console.log('ERROR: ', err);
+    }
+  });
+
+program
+  .command('delete')
+  .description('Delete task by Id')
+  .argument('<id>', 'Task ID')
+  .action((id) => {
+    try {
+      const updatedTaskList = taskList.filter((task) => id !== task.id);
+
+      fs.writeFile(dbFile, JSON.stringify(updatedTaskList), (err) => {
+        if (err) return log(error);
+
+        console.log('Item removed. Task list updated');
+      });
+    } catch (err) {
+      console.log('Error: ', err);
+    }
+  });
+
+program
+  .command('update-title')
+  .description('Update task by Id')
+  .argument('<id>', 'Task ID')
+  .argument('<title>', 'Update title')
+  .action((id, title) => {
+    try {
+      const updatedTaskList = taskList.filter((task) => id === task.id);
+
+      updatedTaskList[0].title = title;
+
+      taskList = Object.assign(taskList, updatedTaskList[0]);
+
+      fs.writeFile(dbFile, JSON.stringify(taskList), (err) => {
+        if (err) return log(error);
+
+        console.log('Title updated. Task list updated');
+      });
+    } catch (err) {
+      console.log('Error: ', err);
     }
   });
 
