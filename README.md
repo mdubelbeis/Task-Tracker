@@ -2,7 +2,7 @@
 
 A simple command-line task tracker built with Node.js.
 
-This project is a practice CLI app for learning Node.js fundamentals, command-line tools, file system operations, JSON data storage, CommonJS modules, and basic project structure.
+*WORK IN PROGRESS*
 
 ---
 
@@ -32,18 +32,19 @@ This project is a practice CLI app for learning Node.js fundamentals, command-li
 
 ## Project Structure
 
+```text
 task-tracker-cli/
 bin/
-index.js
+- index.js
 data/
-taskList.json
+- taskList.json
 utils/
-taskUtils.js
-taskStore.js
-taskOutput.js
+- taskUtils.js
+- taskStore.js
+- taskOutput.js
 package.json
 README.md
-
+```
 ---
 
 ## Main Files
@@ -87,8 +88,10 @@ Handles reading and writing task data.
 
 Examples:
 
-- loadTasks()
-- saveTasks()
+```js
+loadTasks()
+saveTasks()
+```
 
 The app stores task data in:
 
@@ -102,16 +105,19 @@ Handles formatting task output in the terminal.
 
 Examples:
 
-- outputTask()
-- outputAllTasks()
-
+```js
+outputTask()
+outputAllTasks()
+```
 ---
 
 ## Installation
 
 Install dependencies:
 
+```bash
 npm install
+```
 
 ---
 
@@ -119,10 +125,13 @@ npm install
 
 You can run the app directly with Node:
 
+```bash
 node ./bin/index.js list
+```
 
 Examples:
 
+```bash
 node ./bin/index.js add "Study Node CLI" high
 node ./bin/index.js list
 node ./bin/index.js list --completed
@@ -131,29 +140,38 @@ node ./bin/index.js complete <task-id>
 node ./bin/index.js update-title <task-id> "New task title"
 node ./bin/index.js update-priority <task-id> medium
 node ./bin/index.js delete <task-id>
-
+```
 ---
 
 ## Run as a CLI Command
 
-The CLI command name is:
+The CLI command name is: 
 
+```text
 task
+```
 
 First, make the entry file executable:
 
+```bash
 chmod +x ./bin/index.js
+```
 
 Then link the project locally:
 
+```bash
 npm link
+```
 
 Now you can run the CLI from anywhere:
 
+```bash
 task list
+```
 
 Examples:
 
+```bash
 task add "Study Node CLI" high
 task list
 task list --completed
@@ -162,6 +180,7 @@ task complete <task-id>
 task update-title <task-id> "New task title"
 task update-priority <task-id> low
 task delete <task-id>
+```
 
 ---
 
@@ -169,13 +188,17 @@ task delete <task-id>
 
 Add a task:
 
+```bash
 task add "Task title" high
+```
 
 Priority options:
 
+```text
 high
 medium
 low
+```
 
 The app stores priorities in uppercase:
 
@@ -187,67 +210,89 @@ LOW
 
 List all tasks:
 
+```bash
 task list
-
+```
 ---
 
 List completed tasks:
 
+```bash
 task list --completed
-
+```
 or:
 
+```bash
 task list -c
-
+```
 ---
 
 List incomplete tasks:
 
+```bash
 task list --incomplete
+```
 
 or:
 
+```bash
 task list -i
-
+```
 ---
 
 Mark a task as complete:
 
+```bash
 task complete <task-id>
+```
 
 Example:
 
+```bash
 task complete V1StGXR8_Z5jdHi6B-myT
+```
 
 ---
 
 Update a task title:
 
+```bash
 task update-title <task-id> "Updated title"
+```
 
 Example:
 
+```bash
 task update-title V1StGXR8_Z5jdHi6B-myT "Finish CLI README"
+```
 
 ---
 
 Update a task priority:
 
+```bash
 task update-priority <task-id> low
+```
 
 Example:
 
+```bash
 task update-priority V1StGXR8_Z5jdHi6B-myT medium
+```
 
 ---
 
 Delete a task:
 
+```bash
 task delete <task-id>
+```
 
 Example:
 
+```bash
 task delete V1StGXR8_Z5jdHi6B-myT
+```
 
 ---
 
@@ -255,6 +300,7 @@ task delete V1StGXR8_Z5jdHi6B-myT
 
 Each task looks like this:
 
+```json
 {
 "id": "V1StGXR8_Z5jdHi6B-myT",
 "title": "Study Node CLI",
@@ -262,6 +308,7 @@ Each task looks like this:
 "completed": false,
 "createdAt": "2026-05-18T00:00:00.000Z"
 }
+```
 
 ---
 
@@ -269,7 +316,9 @@ Each task looks like this:
 
 Tasks are stored locally in:
 
+```text
 data/taskList.json
+```
 
 If the file does not exist, the app creates it automatically with an empty array:
 
@@ -277,35 +326,13 @@ If the file does not exist, the app creates it automatically with an empty array
 
 ---
 
-## Current Learning Goals
-
-This project is being used to practice:
-
-- Node.js basics
-- CommonJS imports and exports
-- CLI app structure
-- Commander commands and arguments
-- Reading files with fs.readFileSync()
-- Writing files with fs.writeFileSync()
-- JSON.parse()
-- JSON.stringify()
-- Array methods like push(), find(), filter()
-- Simple validation
-- Separating code into utility modules
-- Using npm scripts and package.json
-- Using npm link to run a local CLI command
-
----
-
 ## Current Status
 
 The app currently supports basic task management from the terminal.
 
-The project is intentionally simple and focused on learning the fundamentals before moving into TypeScript or more advanced CLI features.
-
 ---
 
-## Possible Future Improvements
+## Future Improvements
 
 - Add due dates
 - Add task categories
@@ -326,11 +353,9 @@ The project is intentionally simple and focused on learning the fundamentals bef
 
 This is a learning project.
 
-The main goal is not to build a perfect production-ready CLI tool yet.
+The main goal is not to build a perfect production-ready CLI tool yet. The goal is to understand the flow of a CLI application:
 
-The main goal is to understand the flow:
-
-read tasks from JSON
-modify the task list
-save the updated task list
-show useful output in the terminal
+1. Read tasks from JSON
+2. Modify the task list
+3. Save the updated task list
+4. Show useful output in the terminal
