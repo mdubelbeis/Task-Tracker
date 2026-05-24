@@ -1,6 +1,6 @@
 {
   "name": "task-tracker-cli",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A simple command-line task tracker built with Node.js",
   "main": "./bin/index.js",
   "bin": {
